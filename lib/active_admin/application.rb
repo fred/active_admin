@@ -27,6 +27,9 @@ module ActiveAdmin
     # include their paths in this load path to provide active_admin UIs
     setting :load_paths, [File.expand_path('app/admin', Rails.root)]
 
+    # Define how many columns to show on the dashboard
+    inheritable_setting :dashboard_columns, 3
+
     # The default number of resources to display on index pages
     inheritable_setting :default_per_page, 30
 
@@ -56,9 +59,6 @@ module ActiveAdmin
 
     # The method to use when generating the link for user logout
     inheritable_setting :logout_link_method, :get
-
-    # Define how many columns to show on the dashboard
-    inheritable_setting :dashboard_columns, 3
 
     # Active Admin makes educated guesses when displaying objects, this is
     # the list of methods it tries calling in order
