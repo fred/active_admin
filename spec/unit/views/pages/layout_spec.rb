@@ -42,22 +42,4 @@ describe ActiveAdmin::Views::Pages::Layout do
     layout.title.should == "My Page Title"
   end
 
-  it "should be the default translation" do
-    helpers.params[:action] = "edit"
-
-    layout.title.should == "Edit"
-  end
-
-  describe "the body" do
-
-    it "should have class 'active_admin'" do
-      layout.build.class_list.should include 'active_admin'
-    end
-
-    it "should have namespace class" do
-      layout.build.class_list.should include "#{active_admin_namespace.name}_namespace"
-    end
-
-  end
-
 end
