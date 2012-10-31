@@ -61,7 +61,16 @@ module ActiveAdmin
     inheritable_setting :logout_link_method, :get
 
     # Whether the batch actions are enabled or not
-    inheritable_setting :batch_actions, true
+    inheritable_setting :batch_actions, false
+
+    # Whether filters are enabled
+    inheritable_setting :filters, true
+
+    # The namespace root.
+    inheritable_setting :root_to, 'dashboard#index'
+
+    # Default CSV separator
+    inheritable_setting :csv_column_separator, ','
 
     # Active Admin makes educated guesses when displaying objects, this is
     # the list of methods it tries calling in order
@@ -113,11 +122,17 @@ module ActiveAdmin
     # @returns [Namespace] the new or existing namespace
     def find_or_create_namespace(name)
       name ||= :root
-      return namespaces[name] if namespaces[name]
-      namespace = Namespace.new(self, name)
-      namespaces[name] = namespace
-      ActiveAdmin::Event.dispatch ActiveAdmin::Namespace::RegisterEvent, namespace
+
+      if namespaces[name]
+        namespace = namespaces[name]
+      else
+        namespace = Namespace.new(self, name)
+        namespaces[name] = namespace
+        ActiveAdmin::Event.dispatch ActiveAdmin::Namespace::RegisterEvent, namespace
+      end
+
       yield(namespace) if block_given?
+
       namespace
     end
 
@@ -200,26 +215,26 @@ module ActiveAdmin
     end
 
     #
-    # Add before, around and after filters to each registered resource.
+    # Add before, around and after filters to each registered resource and pages.
     #
     # eg:
     #
     #   ActiveAdmin.before_filter :authenticate_admin!
     #
     def before_filter(*args, &block)
-      ResourceController.before_filter(*args, &block)
+      BaseController.before_filter(*args, &block)
     end
 
     def skip_before_filter(*args, &block)
-      ResourceController.skip_before_filter(*args, &block)
+      BaseController.skip_before_filter(*args, &block)
     end
 
     def after_filter(*args, &block)
-      ResourceController.after_filter(*args, &block)
+      BaseController.after_filter(*args, &block)
     end
 
     def around_filter(*args, &block)
-      ResourceController.around_filter(*args, &block)
+      BaseController.around_filter(*args, &block)
     end
 
     # Helper method to add a dashboard section
@@ -233,7 +248,7 @@ module ActiveAdmin
       register_stylesheet 'active_admin.css', :media => 'screen'
       register_stylesheet 'active_admin/print.css', :media => 'print'
 
-      if !ActiveAdmin.use_asset_pipeline?
+      unless ActiveAdmin.use_asset_pipeline?
         register_javascript 'jquery.min.js'
         register_javascript 'jquery-ui.min.js'
         register_javascript 'jquery_ujs.js'

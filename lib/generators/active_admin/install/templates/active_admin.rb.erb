@@ -86,6 +86,13 @@ ActiveAdmin.setup do |config|
   # Default:
   # config.logout_link_method = :get
 
+  # == Root
+  #
+  # Set the action to call for the root path. You can set different
+  # roots for each namespace.
+  #
+  # Default:
+  # config.root_to = 'dashboard#index'
 
   # == Admin Comments
   #
@@ -108,14 +115,13 @@ ActiveAdmin.setup do |config|
   #
   # Enable and disable Batch Actions
   #
-  # Default:
-  # config.batch_actions = true
+  config.batch_actions = true
   
 
   # == Controller Filters
   #
   # You can add before, after and around filters to all of your
-  # Active Admin resources from here.
+  # Active Admin resources and pages from here.
   #
   # config.before_filter :do_something_awesome
 
@@ -136,9 +142,9 @@ ActiveAdmin.setup do |config|
   #   config.register_javascript 'my_javascript.js'
 
 
-  # == Dashboard
+  # == CSV options
   #
-  # Change how many Columns to display on the Dashboard
-  # default: 3
-  #   config.dashboard_columns = 3
+  # Set the CSV builder separator (default is ",")
+  # config.csv_column_separator = ','
+
 end
